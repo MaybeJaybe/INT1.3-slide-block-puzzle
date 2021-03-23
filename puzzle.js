@@ -31,13 +31,25 @@ class Puzzle {
   create() {
     const div = document.createElement('div');
     div.style.position = 'relative';
+    div.style.margin = '0 auto';
     return div;
   }
 
   setup() {
-    for (let i = 0; i < this.dimensions * this.dimensions - 1; i++) {
+    for (let i = 0; i < this.dimensions * this.dimensions; i++) {
       // console.log(i)
       this.blocks.push(new Block(this, i));
+    }
+    this.shuffle();
+    console.log(this.blocks);
+  }
+
+  shuffle() {
+    for (let i = this.blocks.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [this.blocks[i], this.blocks[j]] = [this.blocks[j], this.blocks[i]];
+      this.blocks[i].setPosition(i);
+      this.blocks[j].setPosition(j);
     }
   }
 }
