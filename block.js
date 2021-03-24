@@ -14,6 +14,7 @@ class Block {
       return;
     }
     this.setImage();
+    this.setPosition(this.index);
   }
 
   createDiv() {
@@ -26,30 +27,52 @@ class Block {
     div.style.border = '1px solid #b6ced0';
 
     div.onclick = () => {
-      console.log("Click", this.index);
+      console.log('Click', this.index);
+      console.log('Empty index');
+
+      const currentIndex = this.puzzle.findPosition(this.index);
+      const emptyIndex = this.puzzle.findEmpty();
+      const { x, y } = this.getCoordinates(currentIndex);
+      const { x: emptyX, y: emptyY } = this.getCoordinates(emptyIndex);
+      console.log(x, y);
+      console.log(emptyX, emptyY);
+      if ((x === emptyX || y === emptyY)
+      && (Math.abs(x - emptyX) === 1 || Math.abs(y - emptyY) === 1)) {
+        console.log('can swap');
+        this.puzzle.swapBlocks(currentIndex, emptyIndex);
+      }
     };
 
     return div;
   }
 
   setImage() {
-    const top = this.height * (Math.floor(this.index / this.puzzle.dimensions));
-    const left = this.width * (this.index % this.puzzle.dimensions);
+    const { x, y } = this.getCoordinates(this.index);
+    const top = this.height * y;
+    const left = this.width * x;
     this.el.style.backgroundImage = `url(${this.puzzle.imageSrc})`;
     this.el.style.backgroundPosition = `-${left}px -${top}px`;
   }
 
   setPosition(index) {
-    const {left, top} = this.getPosition(index);
+    const { left, top } = this.getPosition(index);
     this.el.style.top = `${top}px`;
     this.el.style.left = `${left}px`;
   }
 
   getPosition(index) {
+    const { x, y } = this.getCoordinates(index);
     return {
-      top: this.height * (Math.floor(index / this.puzzle.dimensions)),
-      left: this.width * (index % this.puzzle.dimensions),
-    }
+      top: this.height * y,
+      left: this.width * x,
+    };
+  }
+
+  getCoordinates(index) {
+    return {
+      x: index % this.puzzle.dimensions,
+      y: Math.floor(index / this.puzzle.dimensions),
+    };
   }
 }
 export default Block;

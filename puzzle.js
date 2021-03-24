@@ -36,21 +36,50 @@ class Puzzle {
   }
 
   setup() {
+    const shuffleButton = document.getElementById('shuffle-btn');
+
     for (let i = 0; i < this.dimensions * this.dimensions; i++) {
       // console.log(i)
       this.blocks.push(new Block(this, i));
     }
-    this.shuffle();
-    console.log(this.blocks);
+    // this.shuffle();
+    shuffleButton.addEventListener('click', this.shuffle);
+    // console.log(this.blocks);
   }
 
   shuffle() {
     for (let i = this.blocks.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [this.blocks[i], this.blocks[j]] = [this.blocks[j], this.blocks[i]];
-      this.blocks[i].setPosition(i);
-      this.blocks[j].setPosition(j);
+      this.swapBlocks(i, j);
     }
+  }
+
+  swapBlocks(i, j) {
+    [this.blocks[i], this.blocks[j]] = [this.blocks[j], this.blocks[i]];
+    this.blocks[i].setPosition(i);
+    this.blocks[j].setPosition(j);
+    console.log(this.blocks);
+
+    if (this.finishedPuzzle()) {
+      console.log('Puzzle complete');
+    }
+  }
+
+  finishedPuzzle() {
+    for (let i = 0; i < this.blocks.length; i++) {
+      if (i !== this.blocks[i].index) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  findPosition(index) {
+    return this.blocks.findIndex(block => block.index === index);
+  }
+
+  findEmpty() {
+    return this.blocks.findIndex(block => block.isEmpty);
   }
 }
 export default Puzzle;
