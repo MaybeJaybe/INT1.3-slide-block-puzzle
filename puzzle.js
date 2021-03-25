@@ -36,14 +36,14 @@ class Puzzle {
   }
 
   setup() {
-    const shuffleButton = document.getElementById('shuffle-btn');
+    // const shuffleButton = document.getElementById('shuffle-btn');
 
     for (let i = 0; i < this.dimensions * this.dimensions; i++) {
       // console.log(i)
       this.blocks.push(new Block(this, i));
     }
-    // this.shuffle();
-    shuffleButton.addEventListener('click', this.shuffle);
+    this.shuffle();
+    // shuffleButton.addEventListener('click', this.shuffle);
     // console.log(this.blocks);
   }
 
